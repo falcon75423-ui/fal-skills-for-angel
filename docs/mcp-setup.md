@@ -1,30 +1,59 @@
-# MCP 工具設定
+# MCP 工具設定（Mac 完整版）
 
 `fal-pack` 的搜尋武器庫透過 **`skillful-mcp`** 中介層調用底層工具
-（NotebookLM / Tavily / Exa / Chrome DevTools / Playwright / paper-search 等）。
+（Exa、Tavily、Chrome DevTools、Playwright；NotebookLM 之後另外加）。
 
-要讓 skill 可以正常工作，這層 MCP 必須先設好。
+要讓 skill 可以正常工作，這層 MCP 必須先設好。整個流程約 20 分鐘。
+
+> 💡 **如果你正在用 IDE 裡的 Claude 接管安裝**，Claude 會幫你跑下面大部分命令，
+> 你只要在被要求時提供 API key 跟 Mac 密碼即可。
 
 ---
 
-## 1. 安裝 skillful-mcp
+## 第一步：裝 skillful-mcp 本體
 
-> ⚠️ **這一步請另外跟分享者拿安裝指引**——`skillful-mcp` 不在公開 PyPI，
-> 通常需要分享者直接給你 git clone URL 或私有 token。
+skillful-mcp 是「中介層」——它把多個下游 MCP servers 包成一個給 Claude Code 用。
 
-預期流程大致長這樣（請以分享者實際提供的為準）：
+Mac 兩種裝法（**選一個**）：
+
+### 方法 A：下載官方 binary（最快，1 分鐘）
 
 ```bash
-# 範例（實際命令依分享者提供為準）
-uv tool install --from <skillful-mcp 的 git URL> skillful-mcp
+# Apple Silicon Mac (M1/M2/M3/M4)：
+mkdir -p ~/.local/bin
+curl -L "https://github.com/kurtisvg/skillful-mcp/releases/download/v0.0.1/skillful-mcp_0.0.1_darwin_arm64" -o ~/.local/bin/skillful-mcp
+chmod +x ~/.local/bin/skillful-mcp
 
-# 或者 clone 後本地裝：
-# git clone <skillful-mcp git URL> ~/skillful-mcp
-# cd ~/skillful-mcp
-# uv tool install -e .
+# Intel Mac：
+mkdir -p ~/.local/bin
+curl -L "https://github.com/kurtisvg/skillful-mcp/releases/download/v0.0.1/skillful-mcp_0.0.1_darwin_amd64" -o ~/.local/bin/skillful-mcp
+chmod +x ~/.local/bin/skillful-mcp
 ```
 
-驗證 server 本體可呼叫：
+> 不確定你是 Apple Silicon 還是 Intel？跑 `uname -m`。`arm64` = Apple Silicon，`x86_64` = Intel。
+
+把 `~/.local/bin` 加到 PATH（如果還沒在）：
+
+```bash
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.zshrc
+source ~/.zshrc
+```
+
+驗證：
+
+```bash
+which skillful-mcp
+skillful-mcp --version
+```
+
+### 方法 B：從 source 裝（要 Go 1.25+）
+
+```bash
+brew install go
+go install github.com/kurtisvg/skillful-mcp@latest
+```
+
+驗證：
 
 ```bash
 which skillful-mcp
@@ -32,66 +61,115 @@ which skillful-mcp
 
 ---
 
-## 2. 申請各家 API key
+## 第二步：申請 API keys
 
-`skillful-mcp` 內部會調用幾家服務。你需要分別到各家網站申請：
+需要兩家服務的 key（都有免費額度）：
 
-| 服務 | 用途 | 申請網址 | 是否必要 |
+| 服務 | 用途 | 申請網址 | 免費額度 |
 |------|------|----------|---------|
-| **Exa** | 語意搜尋（深度研究、法眼必用）| https://dashboard.exa.ai/ | 🔴 必要 |
-| **Tavily** | 廣度搜尋 + 網站爬蟲 + 日期過濾 | https://app.tavily.com/ | 🟡 建議（免費額度 1,000/月）|
-| **NotebookLM** | 學術論文 + YouTube 逐字稿 | 需 `nlm` CLI 登入 Google | 🟡 建議（用法眼跟深度研究都會更強） |
-| Anthropic API | 通常 Claude Code 已有 | https://console.anthropic.com/ | ✅ 已就緒 |
+| **Exa** | 語意搜尋（深度研究、法眼必用）| https://dashboard.exa.ai/ | 有免費 tier |
+| **Tavily** | 廣度搜尋 + 網站爬蟲 | https://app.tavily.com/ | 1,000 次/月 |
 
-把拿到的 key 都暫時記下來，下一步會用到。
+操作：
+
+1. 開兩個網站，分別**用 Google 帳號**或 email 註冊
+2. 進 Dashboard → API keys 區
+3. 各複製一個 key 出來，**待會要設成環境變數**
 
 ---
 
-## 3. 把 skillful-mcp 加進 Claude Code
+## 第三步：把 API keys 設成環境變數
+
+打開 `~/.zshrc`：
 
 ```bash
-# 把 skillful-mcp 註冊成 stdio MCP server，並把 API keys 透過環境變數傳進去：
-claude mcp add skillful-mcp --scope user \
-  -e EXA_API_KEY=你的Exa金鑰 \
-  -e TAVILY_API_KEY=你的Tavily金鑰 \
-  -- skillful-mcp
+open -e ~/.zshrc
 ```
 
-> 命令細節以分享者提供的 skillful-mcp README 為準。
+加進這兩行（把 `xxxxx` 換成剛申請到的 key）：
 
-驗證 server 連得上：
+```bash
+export EXA_API_KEY="xxxxx-你的-Exa-key"
+export TAVILY_API_KEY="xxxxx-你的-Tavily-key"
+```
+
+存檔，回終端機跑：
+
+```bash
+source ~/.zshrc
+```
+
+驗證：
+
+```bash
+echo $EXA_API_KEY  # 應該印出你的 key
+echo $TAVILY_API_KEY
+```
+
+---
+
+## 第四步：建 skillful-mcp 設定檔
+
+```bash
+mkdir -p ~/.skillful-mcp
+```
+
+從 repo 下載 template：
+
+```bash
+curl -L "https://raw.githubusercontent.com/falcon75423-ui/fal-skills-for-angel/main/docs/mcp-template-mac.json" \
+     -o ~/.skillful-mcp/mcp.json
+```
+
+> 這個 template 已經設好 Exa + Tavily + Chrome DevTools + Playwright 四個 server，API key 透過環境變數讀取。
+
+---
+
+## 第五步：把 skillful-mcp 註冊進 Claude Code
+
+```bash
+claude mcp add skillful --scope user -- ~/.local/bin/skillful-mcp --config ~/.skillful-mcp/mcp.json
+```
+
+驗證：
 
 ```bash
 claude mcp list
 ```
 
-應該看到 `skillful-mcp` 列在裡面，狀態是 `connected`。
+應該看到：
+
+```
+skillful: ~/.local/bin/skillful-mcp --config ~/.skillful-mcp/mcp.json - ✓ Connected
+```
 
 ---
 
-## 4. NotebookLM 認證（額外步驟）
+## 第六步：重啟 Claude Code IDE
 
-NotebookLM 走 Google session cookie，不用 API key 但要登入一次：
-
-```bash
-nlm login
-```
-
-會跳出瀏覽器讓你登入 Google 帳號。Cookie 約 2-3 週有效，過期再跑一次。
-
-> 🔴 法眼 skill 啟動時會自動探測 NotebookLM 認證，過期會主動提醒你重跑。
+關閉 IDE 重開，讓它讀新的 MCP 設定。
 
 ---
 
-## 5. 驗證 MCP 工具可用
+## 第七步：驗證（在 Claude Code 對話框跑）
 
-開啟 Claude Code，問它：
+問 Claude：
 
 ```
-請呼叫 skillful-mcp 的 list_skills 看可用工具
+請呼叫 skillful 的 list_skills 看可用工具
 ```
 
-如果 Claude 回覆能列出 `notebooklm` / `tavily` / `exa` / `playwright` 等子 skill，就 OK 了。
+如果看到 `tavily` / `exa` / `chrome-devtools` / `playwright` 出現在列表，就成功了。
+
+---
+
+## NotebookLM（之後加）
+
+分享者用的是 https://github.com/jacob-bd/notebooklm-mcp-cli（Python 寫的，用 uv 安裝）。
+
+請跟分享者拿具體 Mac 安裝命令（會涉及 Google 帳號登入流程）。
+
+裝完後編輯 `~/.skillful-mcp/mcp.json`，把 `_notebooklm_TODO` 區塊改名成 `notebooklm`，填入正確的 command/args（分享者會告訴你完整內容）。
 
 ---
 
@@ -99,13 +177,13 @@ nlm login
 
 | 症狀 | 解法 |
 |------|------|
-| `claude mcp list` 看不到 skillful-mcp | 重跑 `claude mcp add` 命令；確認 `which skillful-mcp` 有結果 |
-| 顯示 connected 但 LLM 說「找不到工具」| 重啟 Claude Code（換新對話）|
-| Exa/Tavily 報 401/403 | API key 沒設好；用 `claude mcp get skillful-mcp` 看 env vars |
-| NotebookLM 失敗 | 跑 `nlm login --check` 看認證狀態；過期就重 login |
+| `claude mcp list` 看不到 skillful | 確認 `which skillful-mcp` 有結果；如果沒 PATH 加好就重跑第一步 |
+| `skillful: ✗` connection failed | 跑 `~/.local/bin/skillful-mcp --config ~/.skillful-mcp/mcp.json` 看錯誤訊息 |
+| Exa / Tavily 報 401 | API key 沒生效；跑 `echo $EXA_API_KEY` 確認；沒值就重新 `source ~/.zshrc` |
+| 顯示 connected 但 LLM 說「找不到工具」 | 重啟 Claude Code IDE（不是只關對話框，是整個 app 退出再開） |
 
 ---
 
 ## 下一步
 
-→ 回 [README.md](../README.md) 第 3 步「安裝 plugin」。
+回 [README.md](../README.md) 第 3 步「安裝 plugin」。

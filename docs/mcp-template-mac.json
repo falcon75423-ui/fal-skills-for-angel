@@ -1,0 +1,48 @@
+{
+  "_comment": "skillful-mcp Mac 版 template — Angel 版本",
+  "_instructions": "1. 把這個檔複製到 ~/.skillful-mcp/mcp.json  2. 在 shell 設好 EXA_API_KEY 跟 TAVILY_API_KEY 環境變數  3. 重啟 Claude Code 即可啟用",
+  "mcpServers": {
+    "tavily": {
+      "type": "http",
+      "url": "https://mcp.tavily.com/mcp/?tavilyApiKey=${TAVILY_API_KEY}",
+      "description": "Tavily 網路搜尋與內容抓取 — search / extract / crawl / map / research。比 WebSearch 更專業，做研究與情蒐用。"
+    },
+    "exa": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "exa-mcp-server"
+      ],
+      "env": {
+        "EXA_API_KEY": "${EXA_API_KEY}"
+      },
+      "description": "Exa 網路搜尋 — 補強 Tavily 的另一個來源，適合語意搜尋找特定型態內容。"
+    },
+    "chrome-devtools": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "chrome-devtools-mcp@latest",
+        "--no-usage-statistics",
+        "--browserUrl=http://127.0.0.1:9222"
+      ],
+      "description": "Chrome DevTools 操控 — 攔網路請求、跑 Lighthouse、模擬裝置、效能分析、抓 console。需要看網頁底層運作時用。"
+    },
+    "playwright": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@playwright/mcp@latest",
+        "--cdp-endpoint",
+        "http://localhost:9222"
+      ],
+      "description": "Playwright 自動化瀏覽器操作 — 點擊、填表單、截圖、上傳檔案、E2E 測試。需要模擬使用者動作時用。"
+    },
+    "_notebooklm_TODO": {
+      "_note": "Lester 用的是 https://github.com/jacob-bd/notebooklm-mcp-cli。等 Lester 給你具體安裝命令跟 binary 路徑後，把這段的 key 從 _notebooklm_TODO 改成 notebooklm，把 command 改成正確路徑（譬如 ~/.local/bin/notebooklm-mcp 或 uv 跑的命令）。",
+      "command": "TBD-請等-Lester-給命令",
+      "args": [],
+      "description": "NotebookLM 本地工具 — 建 notebook、加 source、跑 deep research、產出 audio/video/podcast/infographic/slides。"
+    }
+  }
+}
