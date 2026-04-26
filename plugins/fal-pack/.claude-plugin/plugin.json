@@ -1,0 +1,5 @@
+{
+  "name": "fal-pack",
+  "description": "六個 Claude Code skill 套組——深度研究（偵察兵）、法眼（內容策展）、火神鍛造（工頭）、淬鍊師（冷眼工匠）、淬煉團（5 角色重兵器）、playwright-cli。需搭配 skillful-mcp 使用。",
+  "version": "0.2.0"
+}
