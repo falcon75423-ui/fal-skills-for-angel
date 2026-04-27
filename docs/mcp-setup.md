@@ -21,12 +21,12 @@ Mac 兩種裝法（**選一個**）：
 ```bash
 # Apple Silicon Mac (M1/M2/M3/M4)：
 mkdir -p ~/.local/bin
-curl -L "https://github.com/kurtisvg/skillful-mcp/releases/download/v0.0.1/skillful-mcp_0.0.1_darwin_arm64" -o ~/.local/bin/skillful-mcp
+curl -L "https://github.com/kurtisvg/skillful-mcp/releases/download/v0.1.0/skillful-mcp_0.1.0_darwin_arm64" -o ~/.local/bin/skillful-mcp
 chmod +x ~/.local/bin/skillful-mcp
 
 # Intel Mac：
 mkdir -p ~/.local/bin
-curl -L "https://github.com/kurtisvg/skillful-mcp/releases/download/v0.0.1/skillful-mcp_0.0.1_darwin_amd64" -o ~/.local/bin/skillful-mcp
+curl -L "https://github.com/kurtisvg/skillful-mcp/releases/download/v0.1.0/skillful-mcp_0.1.0_darwin_amd64" -o ~/.local/bin/skillful-mcp
 chmod +x ~/.local/bin/skillful-mcp
 ```
 

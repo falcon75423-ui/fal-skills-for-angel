@@ -25,7 +25,7 @@ GitHub repo：**https://github.com/falcon75423-ui/fal-skills-for-angel**
 
 > 「嗨 Angel，我是 Claude，要幫妳裝 fal-skills 工具套組。整個過程約 40-60 分鐘，分成五個階段：
 > 1. 裝基礎工具（10 分鐘）
-> 2. 裝 skillful-mcp 中介層（10 分鐘，要 Lester 給妳具體命令）
+> 2. 裝 skillful-mcp + notebooklm-mcp（10 分鐘）
 > 3. 設定 API keys 跟 MCP 設定檔（15 分鐘）
 > 4. 裝 fal-pack plugin（5 分鐘）
 > 5. patch 顧問團 + 測試（10 分鐘）
@@ -90,32 +90,29 @@ mkdir -p "$HOME/playwright-chrome"
 
 ---
 
-## 階段 2：裝 skillful-mcp + notebooklm-mcp（要 Angel 找 Lester 拿指引）
+## 階段 2：裝 skillful-mcp + notebooklm-mcp
 
-這兩個工具有特定的安裝方式，Lester 會直接告訴 Angel 命令。**不要自己猜命令**。
-
-涉及的兩個 source（給你脈絡，但**不要**直接照 README 跑——以 Lester 給的命令為準）：
-- skillful-mcp: https://github.com/kurtisvg/skillful-mcp （Go 寫的中介層）
-- notebooklm-mcp-cli: https://github.com/jacob-bd/notebooklm-mcp-cli （Python 寫的 NotebookLM bridge）
+這兩個工具的 Mac 安裝命令已經寫成兩段獨立訊息，Angel 直接貼給你即可。
 
 跟 Angel 說：
 
-> 「下一步要裝兩個比較特別的工具：**skillful-mcp**（搜尋武器庫的中介層）跟 **notebooklm-mcp**（NotebookLM 接口）。這兩個 Lester 用的版本有特殊配置，請現在訊息他：
+> 「下一步要裝兩個工具：**skillful-mcp**（搜尋武器庫的中介層）跟 **notebooklm-mcp**（NotebookLM 接口）。
 >
-> 『請給我 skillful-mcp + notebooklm-mcp 的 Mac 安裝命令』
+> 我準備了兩段訊息，請依序開下面兩個連結，把整段內容（從『嗨 Claude...』那行開始）複製貼給我，我會自動處理：
 >
-> Lester 把命令貼給妳後，妳整段貼給我，我幫妳跑。」
+> 1. **skillful-mcp**: https://github.com/falcon75423-ui/fal-skills-for-angel/blob/main/docs/Angel-貼給Claude-skillful-mcp.md
+> 2. **notebooklm-mcp**: https://github.com/falcon75423-ui/fal-skills-for-angel/blob/main/docs/Angel-貼給Claude-notebooklm-mcp.md
+>
+> 第一段我跑完會說『✅ 裝好了』再請妳貼第二段。第二段中間有一步妳要在瀏覽器登 Google 帳號（給 NotebookLM 用），到那一步我會告訴妳怎麼做。」
 
-**等 Angel 貼來 Lester 給的命令後**，你逐條跑、確認成功。
-
-跑完驗證：
+兩段都跑完，最後驗證：
 
 ```bash
 which skillful-mcp
-which notebooklm-mcp || ls ~/.local/bin/notebooklm-mcp
+which notebooklm-mcp
 ```
 
-✅ 階段 2 完成。
+兩個都印出路徑 = ✅ 階段 2 完成。
 
 ---
 
@@ -156,7 +153,35 @@ curl -L "https://raw.githubusercontent.com/falcon75423-ui/fal-skills-for-angel/m
      -o ~/.skillful-mcp/mcp.json
 ```
 
-### 3.5 把 skillful-mcp 註冊進 Claude Code
+### 3.5 把 notebooklm 接到 skillful-mcp 上面
+
+template 裡 notebooklm 是 placeholder（key 叫 `_notebooklm_TODO`，因為當初不確定 Angel 會不會用）。階段 2 已經裝好 notebooklm-mcp，現在你用 Edit 工具直接改 `~/.skillful-mcp/mcp.json`：
+
+把這段（包含整個 `_notebooklm_TODO` 物件）：
+
+```json
+"_notebooklm_TODO": {
+  "_note": "Lester 用的是 https://github.com/jacob-bd/notebooklm-mcp-cli。等 Lester 給你具體安裝命令跟 binary 路徑後，把這段的 key 從 _notebooklm_TODO 改成 notebooklm，把 command 改成正確路徑（譬如 ~/.local/bin/notebooklm-mcp 或 uv 跑的命令）。",
+  "command": "TBD-請等-Lester-給命令",
+  "args": [],
+  "description": "NotebookLM 本地工具 — 建 notebook、加 source、跑 deep research、產出 audio/video/podcast/infographic/slides。"
+}
+```
+
+整段換成：
+
+```json
+"notebooklm": {
+  "command": "notebooklm-mcp",
+  "description": "NotebookLM 本地工具 — 建 notebook、加 source、跑 deep research、產出 audio/video/podcast/infographic/slides。"
+}
+```
+
+> 注意點：
+> - key 從 `_notebooklm_TODO` 改成 `notebooklm`（少了底線跟 _TODO）
+> - 如果階段 2 跑 `which notebooklm-mcp` 印出來的不是純 `notebooklm-mcp` 而是某個完整路徑（譬如 `/Users/angel/.local/bin/notebooklm-mcp`），把 `command` 改成那個完整路徑
+
+### 3.6 把 skillful-mcp 註冊進 Claude Code
 
 ```bash
 claude mcp add skillful --scope user -- ~/.local/bin/skillful-mcp --config ~/.skillful-mcp/mcp.json
