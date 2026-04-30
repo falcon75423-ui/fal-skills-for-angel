@@ -1,0 +1,409 @@
+---
+# ============================================================
+# Word DESIGN.md — 中文 Word 文件設計系統規格
+# ============================================================
+# 規格基礎：Google Stitch DESIGN.md format（適配 Word 中文場景）
+# 來源：F-017 文本參謀長 + 火神鍛造工頭跨客戶協作鍛造（2026-04-30）
+# 借鑑：impeccable v3.0.5（pbakaus/impeccable）
+#
+# 跟 Stitch 規格的差異（Word dialect）：
+#   ✅ 保留：colors / typography / spacing / components
+#   ✏️ 重新利用：elevation → sections（Word 的層次來自分節）
+#   ❌ 砍掉：rounded（Word 沒元件圓角）
+#   ➕ 新增：cjk（雙字型/避頭尾/中英間距）+ numbering（多級列表/編號）
+#
+# 介面分工：
+#   - 作者讀的：下方 markdown body 6 段（人話）
+#   - 表弟動的：本 frontmatter（程式吃）
+#   - 同步機制：scripts/load_design.py 解析此 YAML → DESIGN_SYSTEM dict
+#   - 權威：YAML 是真相源；markdown body 是給作者拍板用的人話描述
+# ============================================================
+
+name: "[文件標題]"
+description: "[一句話定位：這是什麼書/誰在讀/什麼氣質]"
+
+# ---------- 色彩 ----------
+colors:
+  primary: "#1A1A2E"       # 主色（標題/強調）
+  secondary: "#4A4A6A"     # 次色（副標/小標題）
+  accent: "#2E86C1"        # 強調色（連結/重點/圖表）
+  body: "#333333"          # 內文色（避免 #000，傷視疲勞）
+  caption: "#666666"       # 輔助色（圖說/腳註）
+  table_header_bg: "#E8EAED"
+  table_border: "#CCCCCC"
+  background: "#FAFAF8"    # 背景紙白（避免 #FFF，加少量暖調）
+
+# ---------- 字體階層 ----------
+# 階層之間 ratio 必須 ≥ 1.25（modular scale）
+# 中文行距 1.5-2.0 倍（不是西文的 1.5 倍）
+typography:
+  display:
+    fontFamily: "Cormorant Garamond, Georgia, serif"
+    fontFamilyCJK: "思源宋體"
+    fontSize: 28              # pt
+    fontWeight: 600
+    lineSpacing: 1.3
+    spaceBefore: 36
+    spaceAfter: 18
+
+  heading_1:
+    fontFamily: "Times New Roman"
+    fontFamilyCJK: "思源宋體"
+    fontSize: 18
+    fontWeight: 700
+    lineSpacing: 1.3
+    spaceBefore: 24
+    spaceAfter: 12
+
+  heading_2:
+    fontFamily: "Times New Roman"
+    fontFamilyCJK: "思源宋體"
+    fontSize: 14
+    fontWeight: 700
+    lineSpacing: 1.4
+    spaceBefore: 18
+    spaceAfter: 6
+
+  heading_3:
+    fontFamily: "Times New Roman"
+    fontFamilyCJK: "思源宋體"
+    fontSize: 12
+    fontWeight: 700
+    lineSpacing: 1.5
+    spaceBefore: 12
+    spaceAfter: 6
+
+  body:
+    fontFamily: "Times New Roman"
+    fontFamilyCJK: "思源宋體"
+    fontSize: 11
+    fontWeight: 400
+    lineSpacing: 1.75         # 中文需要的呼吸感
+    spaceBefore: 0
+    spaceAfter: 6
+
+  body_emphasis:
+    fontFamily: "Times New Roman"
+    fontFamilyCJK: "思源宋體"
+    fontSize: 11
+    fontWeight: 700           # 內文加粗強調
+    lineSpacing: 1.75
+
+  caption:
+    fontFamily: "Times New Roman"
+    fontFamilyCJK: "思源宋體"
+    fontSize: 9
+    fontWeight: 400
+    lineSpacing: 1.4
+
+  quote:
+    fontFamily: "Times New Roman"
+    fontFamilyCJK: "思源宋體"
+    fontSize: 11
+    fontWeight: 400
+    lineSpacing: 1.6
+
+# ---------- 間距系統 ----------
+# 基礎單位 6pt，所有垂直間距是 6 的整數倍（vertical rhythm）
+spacing:
+  unit: 6                     # pt 基礎單位（4/6/8 任選一個 commit）
+  margin_top: "2.54cm"        # 紙張上邊距
+  margin_bottom: "2.54cm"
+  margin_left: "3.17cm"
+  margin_right: "3.17cm"
+  paragraph_indent: "0"       # 首行縮排（書籍寫 "0.74cm" 約 2 字；商業寫 "0"）
+  list_indent: "0.74cm"       # 列表縮排
+  quote_indent: "1.5cm"       # 引用塊縮排
+
+# ---------- CJK 中文特化 ----------
+# 文本參謀長中文場景必經設定
+cjk:
+  pangu_spacing: true         # 中英自動加空格
+  kinsoku: true               # 避頭尾
+  overflow_punct: true        # 標點壓縮
+  auto_space_de: true         # CJK 跟英文自動間距
+  auto_space_dn: true         # CJK 跟數字自動間距
+  punct_width: "fullwidth"    # 標點寬度：fullwidth / halfwidth
+
+# ---------- 編號 ----------
+numbering:
+  heading_style: "1.1.1"      # "1.1.1" / "壹貳參" / "I.A.1" / "第一章/第一節"
+  list_marker: "•"            # 項目符號："•" / "－" / "●" / "▪"
+  toc_depth: 3                # 目錄深度（1-9）
+  figure_prefix: "圖"         # "圖" / "Figure" / "圖表"
+  table_prefix: "表"          # "表" / "Table"
+
+# ---------- 分節（Word 的層次：取代 Stitch 的 elevation）----------
+sections:
+  page_size: "A4"             # A4 / Letter / B5 / 自訂
+  orientation: "portrait"     # portrait / landscape
+  different_first_page: true  # 首頁頁首頁尾不同
+  even_odd_headers: false     # 奇偶頁不同
+  page_number_start: 1        # 頁碼從第幾頁開始
+  page_number_position: "footer_center"  # footer_center / footer_right / header_right
+  cover_page: true            # 是否有封面（封面通常無頁碼）
+
+# ---------- 元件樣式（引用 primitives）----------
+components:
+  body_paragraph:
+    typography: "{typography.body}"
+    indent: "{spacing.paragraph_indent}"
+
+  heading_1_style:
+    typography: "{typography.heading_1}"
+    color: "{colors.primary}"
+
+  heading_2_style:
+    typography: "{typography.heading_2}"
+    color: "{colors.primary}"
+
+  heading_3_style:
+    typography: "{typography.heading_3}"
+    color: "{colors.secondary}"
+
+  table_header:
+    backgroundColor: "{colors.table_header_bg}"
+    typography: "{typography.body_emphasis}"
+
+  table_cell:
+    typography: "{typography.body}"
+    border_color: "{colors.table_border}"
+
+  quote_block:
+    typography: "{typography.quote}"
+    color: "{colors.caption}"
+    indent: "{spacing.quote_indent}"
+
+  caption_text:
+    typography: "{typography.caption}"
+    color: "{colors.caption}"
+
+  link:
+    typography: "{typography.body}"
+    color: "{colors.accent}"
+---
+
+# Design System: [文件標題]
+
+> **作者讀的就是這份 markdown body**。設計決策都用人話描述，看不懂任何一條請直接跟表弟說。
+> 上方 YAML frontmatter 是程式吃的版本，作者忽略即可。
+>
+> 註：跑 `load_design.py --validate` 時模板本身會 WARN 兩條（部分 token 在 placeholder 段未展示用法，屬預期行為）。填入實際內容後重跑即可。
+
+---
+
+## 1. Overview
+
+**創意北極星：「[一個比喻名字 — 例：『編輯部的書房』『深夜的學者書桌』『現代主義的白盒子』]」**
+
+[2-3 段：這份文件的氣質、給誰讀、要傳達什麼。從北極星比喻往外展開，描述頁面氛圍、密度、情緒基調。引用作者在腦海中對「這份文件像什麼」的具體想像。]
+
+**核心特徵**：
+- [特徵 1，例：「沉靜的襯線體 + 飽和的暖白紙背景」]
+- [特徵 2，例：「大量留白，每頁文字密度低於 60%」]
+- [特徵 3，例：「圖表與正文用色相同，不靠彩色製造焦點」]
+
+**這份文件 NOT**：
+- [反例 1，例：「不是 PowerPoint 簡報的鮮豔色塊」]
+- [反例 2，例：「不是 SaaS 紫色漸層」]
+- [反例 3，例：「不是傳統公文死板宋體大字」]
+
+---
+
+## 2. Colors
+
+[一句話描述色彩個性 — 例：「整本書只用三個色，主色是傳統墨色，次色是舊紙泛黃的暖灰，強調色克制使用」]
+
+### 主色 Primary
+- **[描述名 — 例：「沉默深墨」]** (#HEX)：[在哪裡用、為什麼。例：「所有 H1 標題、章節分隔符、頁碼。表達文件的權威感與重量。」]
+
+### 次色 Secondary（可選 — 沒第二強調色就刪這段）
+- **[描述名]** (#HEX)：[角色]
+
+### 強調色 Accent（可選）
+- **[描述名]** (#HEX)：[使用上限 — 例：「全文總用量 ≤ 5%。只用在連結、關鍵數字、警示框。」]
+
+### 中性色 Neutral
+- **[描述名 — 例：「淡墨」]** (#HEX)：[文字色 / 內文]
+- **[描述名 — 例：「霧灰」]** (#HEX)：[輔助文字 / 圖說 / 腳註]
+- **[描述名 — 例：「象牙白」]** (#HEX)：[背景紙色，避免純白 #FFF]
+
+### 命名規則（可選但建議）
+**[規則名 — 例：「One Voice 規則」]**：[強制性紀律 — 例：「主色用量 ≤ 10%。它的稀有性就是它的力量。每頁主色出現 ≤ 3 次。」]
+
+**禁色規則**：禁用純黑 `#000`（傷視疲勞）。禁用純白 `#FFF`（紙頁缺乏溫度）。所有中性色必須帶 0.5%-1% 主色色相偏移。
+
+---
+
+## 3. Typography
+
+**展示字型 Display**：[字型名]（西文 fallback：[字型]）
+**內文字型 Body**：[字型名]（CJK：[字型]，西文 fallback：[字型]）
+**等寬字型 Mono**：[字型名（如有，沒有就刪）]
+
+**個性**：[1-2 句描述配對的氣質 — 例：「展示字型走 18 世紀古典的高對比襯線，內文走現代乾淨的等寬襯線。一張一弛。」]
+
+### 階層
+
+- **Display** ([字重] [字級]pt, 行距 [N]倍)：[用途 — 例：「封面標題、章節大標題」]
+- **Heading 1** ([字重] [字級]pt, 行距 [N]倍, 段前 [N]pt / 段後 [N]pt)：[用途 — 例：「主章節」]
+- **Heading 2** ([字重] [字級]pt, 行距 [N]倍, 段前 [N]pt / 段後 [N]pt)：[用途 — 例：「節」]
+- **Heading 3** ([字重] [字級]pt, 行距 [N]倍, 段前 [N]pt / 段後 [N]pt)：[用途 — 例：「小節（可選）」]
+- **Body** ([字重] [字級]pt, 行距 [N]倍, 中文每行約 [N] 字)：[用途 — 例：「正文，紙頁主體」]
+- **Caption** ([字重] [字級]pt, 行距 [N]倍)：[用途 — 例：「圖說、腳註、引用來源」]
+
+### 中文特化規則
+
+- **行距**：本文件中文採 [1.75 / 1.5 / 1.3 — 擇一] 倍
+- **中英間距**：pangu 自動處理（中文跟英文/數字之間 1/4 全形空格）
+- **避頭尾**：啟用（句末標點不在行首、開引號不在行末）
+- **段落呼吸**：[首行縮排 X 字 / 段距 Y pt — **擇一，不可並用**]
+
+### 命名規則（可選）
+**[規則名 — 例：「字級不雜規則」]**：[字型紀律 — 例：「全文最多 4 個字級階層（不算 caption）。每多一級代表設計師懶得想 hierarchy。」]
+
+---
+
+## 4. Sections（分節層次）
+
+[一段：這份文件如何透過分節 + 邊距 + 頁首頁尾建立層次。例：「全書三分節：封面（無頁碼/無頁首）、目錄（羅馬數字頁碼）、正文（阿拉伯數字頁碼從 1 起算）。每章首頁 H1 上方多留 6cm 給呼吸。」]
+
+### 紙張規格
+- **大小**：[A4 / Letter / B5 / 自訂尺寸]
+- **方向**：[直向 / 橫向 / 混合（哪些頁橫向）]
+- **邊距**：上 [N]cm / 下 [N]cm / 左 [N]cm / 右 [N]cm
+- **裝訂邊**：[N]cm（書籍適用）
+
+### 分節策略
+- **首頁不同**：[Yes/No — 封面/章首通常 Yes]
+- **奇偶頁不同**：[Yes/No — 雙面印書通常 Yes，數位/單面通常 No]
+- **頁碼起算**：第 [N] 頁開始有頁碼 / 第 [N] 頁開始用阿拉伯數字
+- **頁碼位置**：[頁尾置中 / 頁尾外側 / 頁首外側]
+
+### 頁首頁尾內容
+- **頁首左**：[書名 / 章名 / 留空]
+- **頁首中**：[留空 / logo]
+- **頁首右**：[頁碼 / 章名 / 留空]
+- **頁尾**：[頁碼 / 留空 / 浮水印]
+
+### 命名規則（可選）
+**[規則名 — 例：「呼吸章首規則」]**：[分節紀律 — 例：「每章首頁 H1 上方至少留 6cm，下方至少留 1.5cm 才接內文。新章不擠在前章末。」]
+
+---
+
+## 5. Components
+
+每個元件先一句個性描述，再列形狀 / 色彩配置 / 狀態 / 特殊行為。
+
+### 內文段落 Body Paragraph
+- **字型**：引用 `{typography.body}`
+- **段落策略**：[縮排 X 字 / 段距 Y pt — 擇一]
+- **特殊處理**：
+  - 首段是否縮排：[Yes/No]
+  - 引用塊是否獨立樣式：[Yes/No → 詳見「引用塊」]
+  - 列表後的下一段是否縮排：[Yes/No]
+
+### 標題 Headings
+- **層級**：使用 H1 / H2 / [H3 / H4 — 不超過 H4]
+- **編號**：引用 `{numbering.heading_style}` — [例：「1.1.1」 / 「壹貳參」]
+- **字型**：引用 `{typography.heading_X}`
+- **顏色**：H1 用 `{colors.primary}`，其他用 [內文色 / 次色]
+- **段前段後**：H1 段前 24pt 段後 12pt / H2 段前 18pt 段後 6pt（基礎單位 6pt 倍數）
+- **是否分頁**：H1 是否從新頁開始 [Yes/No]
+
+### 表格 Tables
+- **表頭**：背景 `{colors.table_header_bg}`，字重 700，水平 [置中/左對齊]
+- **資料列**：左對齊（文字）/ 右對齊（數字）
+- **邊框**：線寬 [0.5/0.75/1] pt，顏色 `{colors.table_border}`
+- **隔行底色**：[Yes/No → 顏色 #F5F5F5]
+- **行高**：固定 [N]pt 或自動
+- **跨頁處理**：[表頭重複 / 不重複]
+
+### 引用塊 Quotes
+- **左側留白**：縮排 `{spacing.quote_indent}`
+- **字型**：引用 `{typography.quote}`
+- **顏色**：`{colors.caption}`（比正文淡，視覺退後）
+- **左側裝飾**：[無 / 細直線 0.5pt / 引號圖形]
+- **首行縮排**：[繼承全文設定 / 強制不縮排]
+
+### 列表 Lists
+- **項目符號**：引用 `{numbering.list_marker}`
+- **多級**：[單級 / 兩級 / 三級]
+- **縮排**：第一級 `{spacing.list_indent}`，每多一級加 [N]cm
+- **項目間距**：[緊湊 / 標準 / 寬鬆 — 對應 0pt / 3pt / 6pt]
+- **編號列表 vs 項目列表**：用[數字 1.2.3 / 字母 a.b.c / 點 •]
+
+### 圖表 Figures
+- **圖片寬度**：[N]cm 或 [N]% 紙寬
+- **圖片對齊**：[置中 / 左 / 右]
+- **圖說**：引用 `{typography.caption}`，[置中 / 左對齊]，位於圖片[上方 / 下方]
+- **編號**：`{numbering.figure_prefix} 1` / `{numbering.figure_prefix} 1.1`（章節連動）
+- **圖框**：[無 / 細邊框 0.5pt / 陰影]
+
+### 頁首頁尾 Header / Footer
+- **頁首高度**：[N]cm
+- **頁尾高度**：[N]cm
+- **頁首字級**：`{typography.caption.fontSize}`
+- **頁碼格式**：[「1」 / 「第 1 頁」 / 「-1-」 / 「1 / 50」]
+
+### 連結 Links（如果有）
+- **內部交叉引用**：[底線 / 顏色 `{colors.accent}` / 兩者皆是]
+- **外部超連結**：藍色底線（保留 Word 預設）
+
+### [自訂元件]（可選 — 這份文件特有的東西）
+[例：人類學家報告的「角色印記框」、NBA 報告的「判決卡」、產品白皮書的「規格條」]
+- 結構描述
+- 色彩 / 字型 / 留白
+
+---
+
+## 6. Do's and Don'ts
+
+### Do（必做）
+
+- **Do** 用 6pt 整數倍設所有垂直間距（vertical rhythm）
+- **Do** 每個 run 都設 CJK 雙字型（Latin + eastAsia）
+- **Do** 啟用 pangu 中英自動間距
+- **Do** 段落首行縮排或段距，**擇一**
+- **Do** 字級階層之間 ratio ≥ 1.25
+- **Do** 產出後跑 Squint Test（模糊看 hierarchy）
+- **Do** 引用塊獨立樣式（縮排 + 顏色淡化）
+- **Do** 圖說字級小於正文（typography.caption < typography.body）
+- **Do** 表頭字重加粗 + 背景色區分
+
+### Don't（禁止）
+
+- **Don't** 用純黑 `#000` 文字（傷視疲勞 → 用 `#333333` 之類淡墨）
+- **Don't** 用純白 `#FFF` 背景（紙頁失去溫度 → 用 `#FAFAF8` 之類暖白）
+- **Don't** 字型超過 3 套（含 Latin + CJK 各算一套）
+- **Don't** 中文用單倍行距 `1.0`（字疊在一起，閱讀痛苦）
+- **Don't** 縮排 + 段距同時設（兩個都有 = 段落鬆散，紙頁失重）
+- **Don't** 字級階層 ratio < 1.25（hierarchy 模糊掉）
+- **Don't** 段距用 7 / 11 / 13 / 17 pt 等非基礎單位整數倍（節奏破碎）
+- **Don't** 兩套相似 CJK 字型混用（如思源黑體 + 微軟正黑體 = 視覺衝突沒層次）
+- **Don't** Heading 層級跳級（H1 → H3 跳過 H2）
+- **Don't** 圖表用紅綠對比（色弱讀者看不到差異）
+- **Don't** 同一份文件混 ALL-CAPS + 標題大小寫不一致
+
+### 從 PRODUCT.md 抓的反模式（這份文件作者的明確禁忌 — 視作者拍板補上）
+
+- **Don't** [作者明確說過的反例 1]
+- **Don't** [作者明確說過的反例 2]
+
+---
+
+## 介面分工（最末段，作者可不讀）
+
+- **作者讀的**：以上六段 markdown body（人話）
+- **表弟動的**：開頭 YAML frontmatter（程式吃）
+- **同步機制**：`scripts/load_design.py` 解析 YAML → `DESIGN_SYSTEM` dict（單一真相源）
+- **權威**：當 YAML 跟 markdown body 描述對不起來時，**YAML 是真相源**；markdown body 只是給作者拍板用的人話描述
+- **作者刻意風格優先**（呼應 SKILL.md L23）：作者明確說「我這裡刻意用 X」時，DESIGN.md 是地板（M55 規格是地板不是天花板），作者選擇優先
+
+---
+
+**版本資訊**：
+- 規格基礎：Google Stitch DESIGN.md format（適配 Word 中文場景）
+- 中文特化：F-017 由文本參謀長 + 火神鍛造工頭跨客戶協作鍛造（2026-04-30）
+- 借鑑：impeccable v3.0.5（pbakaus/impeccable）
+- 配套：`references/typography_cjk.md` + `scripts/load_design.py`

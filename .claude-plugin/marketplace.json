@@ -4,14 +4,14 @@
     "name": "Lester Wang"
   },
   "metadata": {
-    "description": "深度研究、法眼策展、鍛造工坊、瀏覽器自動化的 skill 套組"
+    "description": "深度研究、法眼策展、鍛造工坊、文件工程、視覺設計、瀏覽器自動化的 skill 套組"
   },
   "plugins": [
     {
       "name": "fal-pack",
       "source": "./plugins/fal-pack",
-      "description": "深度研究 + 法眼策展 + 火神鍛造 + 淬鍊師 + 淬煉團 + playwright-cli 六 skill 套組",
-      "version": "0.2.0"
+      "description": "深度研究 + 法眼策展 + 火神鍛造 + 淬鍊師 + 淬煉團 + 表哥(Excel) + 表弟(Word) + impeccable(UI設計) + playwright-cli 九 skill 套組",
+      "version": "0.3.0"
     }
   ]
 }

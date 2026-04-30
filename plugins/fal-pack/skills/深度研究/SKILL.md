@@ -270,7 +270,7 @@ playwright-cli -s=scraper --raw screenshot --filename=evidence.png
 交付格式由呼叫者決定：
 - 使用者直接呼叫 → 完整情報報告 + 覆蓋率報告
 - 顧問團呼叫 → 精簡摘要 + 關鍵數據 + 來源連結
-- CEO (NBA) 呼叫 → 結構化數據（符合五維蒐集框架）
+- CEO (賽事分析) 呼叫 → 結構化數據（符合五維蒐集框架）
 - 其他 Skill → 按該 Skill 的 Brief 格式
 
 ---

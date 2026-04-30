@@ -1,6 +1,6 @@
 # fal-pack
 
-六個 Claude Code skill 的套組：
+九個 Claude Code skill 的套組：
 
 **研究與策展**
 
@@ -17,6 +17,21 @@
 | **淬鍊師** | 冷眼工匠 ⚒️ | 鍛造完工後做知識淬鍊、智慧資本審計、三情境衝撞驗證 |
 | **淬煉團** | 5 角色重兵器 🔥 | 結構/邊界/策略/動機/簡化 5 視角碰撞，淬鍊師上游淬鍊時召喚 |
 
+**文件工程** ⚠️ Windows-only
+
+| Skill | 角色 | 用來做什麼 |
+|------|------|----------|
+| **表格地下司令** | 表哥 📊 | Excel 精密工程：格式鎖定、模板公版化、三層驗證、CJK 字寬、Google Sheets 相容 |
+| **文本參謀長** | 表弟 📄 | 頂級出版商級 Word 文件工程：三引擎精密產出、四重校對零容忍 |
+
+> ⚠️ 表哥/表弟依賴 `pywin32` + Excel/Word COM。Mac 上 `pip install pywin32` 會失敗、COM 相關功能（修改既有檔/PDF/Track Changes/品檢二讀）不可用。Mac 用戶仍可用純 Python 部分（生成新檔約 50-60% 功能）。
+
+**前端設計**
+
+| Skill | 角色 | 用來做什麼 |
+|------|------|----------|
+| **impeccable** | 剃刀 🔪 | 對 AI slop 過敏的前端設計總監（視覺蒸餾器）：剃除冗餘、craft/critique/polish/overdrive 全包，做出不像 AI 做的介面 |
+
 **底層工具**
 
 | Skill | 角色 | 用來做什麼 |
@@ -29,9 +44,12 @@
 |------|-----------|
 | 深度研究 | 「召喚偵察兵」「偵察 [主題]」「我需要搞懂 X」 |
 | 法眼 | 「召喚法眼」「今天有什麼好文章」「召喚法眼 [主題]」 |
-| 火神鍛造 | 「召喚工頭」「召喚火神」「幫我建一個 skill」「翻修 X」 |
+| 火神鍛造 | 「召喚工頭」「召喚火神」「幫我建一個 skill」「翻修 X」「審兵器」 |
 | 淬鍊師 | 「召喚淬鍊師」「淬煉這個 X」「淬煉這次經驗」 |
 | 淬煉團 | 「召喚淬煉團」「淬煉團來看 X」（淬鍊師會主動召喚）|
+| 表哥 | 「召喚表哥」「幫我做 Excel」「做一個表格」「修改這個 xlsx」「表格跑版了」（Windows-only）|
+| 表弟 | 「召喚表弟」「幫我做 Word」「做一份文件」「排版」「校對」「轉檔成 Word」（Windows-only）|
+| impeccable | 「召喚剃刀」「召喚視覺蒸餾器」「polish UI」「critique 設計」「audit 這頁」「craft 這個 feature」|
 | playwright-cli | 主動觸發場景少（多由其他 skill 在背景叫用）|
 
 ## 內部生態關係
@@ -42,6 +60,7 @@
 法眼（策展）─────→ 火神鍛造（深審）「兵器深審」
 火神鍛造（鍛造）─→ 淬鍊師（淬鍊）「知識淬鍊 / 教訓注入」
 淬鍊師（淬鍊）──→ 淬煉團（重兵器）「上游淬鍊衝撞」
+火神鍛造（協作）─→ 表哥/表弟「格式工程閘門」
 所有 skill ─────→ playwright-cli「網頁抓取」
 ```
 
@@ -49,6 +68,8 @@
 
 - **MCP server**：`skillful-mcp`（封裝 Exa / Tavily / NotebookLM / Chrome DevTools / Playwright 等）
 - **CLI 工具**：`@playwright/cli`（npm 全域套件）
+- **Python 套件**（表哥/表弟，Windows）：`openpyxl`, `pywin32`, `PyMuPDF`, `python-docx`, `docxtpl`, `defusedxml`, `pandoc`
+- **Node.js**（impeccable）：zero dependencies，自帶 scripts
 - **跨 skill**：`顧問團`（外裝；安裝指引在 docs/顧問團連接協議.md）
 
 詳細安裝步驟見 repo 根目錄的 [README.md](../../README.md)。
