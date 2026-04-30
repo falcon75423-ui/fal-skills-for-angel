@@ -15,14 +15,19 @@
 
 幫妳裝的工具套組「fal-skills」做好了，今天可以開始裝。
 
-裡面有 6 個 skill 會大幅升級妳的 Claude 助手：
+裡面有 9 個 skill 會大幅升級妳的 Claude 助手：
 
 🔭 深度研究（偵察兵）— 幫妳上網挖資料、做主題研究
 👁️ 法眼 — 幫妳看文章/影片/podcast 篩選有價值的內容
 ⚒️ 火神鍛造 — 幫妳客製打造新的 skill
 ⚒️ 淬鍊師 — 把零散經驗淬煉成可重用的工具
 🔥 淬煉團 — 5 個角色互相辯論幫妳想清楚問題
+🔪 剃刀（impeccable）— 對 AI slop 過敏的前端設計總監，做網頁/UI 用
+📊 表哥（表格地下司令）— Excel 精密工程 ⚠️ Windows-only
+📄 表弟（文本參謀長）— Word 文件工程 ⚠️ Windows-only
 🌐 playwright-cli — 自動操作瀏覽器（截圖、填表單）
+
+⚠️ 表哥/表弟在 Mac 進階功能（PDF/校對/Track Changes）跑不起來，但生成新檔的基本功能仍 OK；一起裝著也沒成本，未來換 Windows 或跟 Windows 同事合作就能完整跑。
 
 整個安裝大概 40-60 分鐘，妳什麼都不用懂技術，Claude 會一步一步帶妳走。
 ```
@@ -77,14 +82,19 @@ https://raw.githubusercontent.com/falcon75423-ui/fal-skills-for-angel/main/docs/
 
 幫妳裝的工具套組「fal-skills」做好了，今天可以開始裝。
 
-裡面有 6 個 skill 會大幅升級妳的 Claude 助手：
+裡面有 9 個 skill 會大幅升級妳的 Claude 助手：
 
 🔭 深度研究（偵察兵）— 上網挖資料、做主題研究
 👁️ 法眼 — 篩選有價值的文章/影片/podcast
 ⚒️ 火神鍛造 — 客製打造新的 skill
 ⚒️ 淬鍊師 — 把零散經驗淬煉成可重用工具
 🔥 淬煉團 — 5 個角色辯論幫妳想清楚
+🔪 剃刀（impeccable）— 對 AI slop 過敏的前端設計總監
+📊 表哥（表格地下司令）— Excel 精密工程 ⚠️ Windows-only
+📄 表弟（文本參謀長）— Word 文件工程 ⚠️ Windows-only
 🌐 playwright-cli — 自動操作瀏覽器
+
+⚠️ 表哥/表弟 Mac 上進階功能（PDF/校對）跑不起來，基本生成仍 OK，先裝著未來換機可用。
 
 整個安裝大概 40-60 分鐘，妳什麼都不用懂技術，Claude 會一步一步帶妳走。
 
