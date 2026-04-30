@@ -9,13 +9,18 @@
 
 GitHub repo：**https://github.com/falcon75423-ui/fal-skills-for-angel**
 
-這是一個 Claude Code plugin（叫 `fal-pack`），內含六個 skill：
+這是一個 Claude Code plugin（叫 `fal-pack`），內含九個 skill：
 - 深度研究（偵察兵 🔭）
 - 法眼（內容策展 👁️）
 - 火神鍛造（工頭 ⚒️）
 - 淬鍊師（冷眼工匠 ⚒️）
 - 淬煉團（5 角色重兵器 🔥）
+- 剃刀（impeccable 視覺蒸餾器 🔪）
+- 表哥（表格地下司令 📊）⚠️ Windows-only
+- 表弟（文本參謀長 📄）⚠️ Windows-only
 - playwright-cli（瀏覽器自動化）
+
+> ⚠️ **Angel 是 Mac 用戶**：表哥/表弟依賴 pywin32（Windows COM 介面），Mac 上 `pip install pywin32` 會失敗、進階功能（PDF / Track Changes / 品檢二讀）無法使用。但 plugin 會正常安裝、SKILL.md 會被讀到，純 Python 部分（openpyxl 生成新 xlsx、python-docx 編輯 docx）可用。**階段 5.3 煙霧測試不要測表哥/表弟**（呼叫到 win32com 會 ImportError，誤以為安裝失敗）。
 
 ---
 
